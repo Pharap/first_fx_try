@@ -1,0 +1,4 @@
+image_t FXhero   = "../src/Hero_8x8.png"
+image_t FXenemy   = "../src/Enemies_8x8.png"
+image_t FXdungeon   = "../src/Dungeon_8x8.png"
+image_t FXui  = "../src/UI_8x8.png"

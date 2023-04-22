@@ -1,0 +1,52 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "first-map.xml": {
+            "scale": 4.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 63.99999999999999,
+                "y": 32.10526315789473
+            }
+        },
+        "first-map.xml#tiles": {
+            "scaleInDock": 5.5
+        },
+        "intro-test.xml": {
+            "scale": 4.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 63.57894736842104,
+                "y": 31.89473684210526
+            }
+        },
+        "intro-test.xml#tiles": {
+            "scaleInDock": 3
+        }
+    },
+    "last.exportedFilePath": "/home/diego/Github/arduboy/rogue-test/Tiled",
+    "last.imagePath": "/home/diego/Github/arduboy/rogue-test/src",
+    "map.height": 8,
+    "map.lastUsedExportFilter": "CSV files (*.csv)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 8,
+    "map.tileWidth": 8,
+    "map.width": 16,
+    "openFiles": [
+    ],
+    "project": "rogue.tiled-project",
+    "recentFiles": [
+    ],
+    "tileset.embedInMap": true,
+    "tileset.tileSize": {
+        "height": 8,
+        "width": 8
+    }
+}
