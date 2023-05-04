@@ -17,6 +17,10 @@ struct Characters:Rect
 
     bool collide = false;
 
+    bool weapon = false;
+
+    uint8_t step = 8;
+
     uint8_t frame = 0;
 
     int8_t life = 3;

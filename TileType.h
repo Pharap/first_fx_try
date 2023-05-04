@@ -38,3 +38,9 @@ constexpr TileType fromTileIndex(uint8_t tileIndex)
 {
 	return static_cast<TileType>(tileIndex);
 }
+
+constexpr bool isSolid(TileType tileType)
+{
+	// Currently all tiles apart from 'None' are solid
+	return (tileType != TileType::Floor);
+}

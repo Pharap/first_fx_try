@@ -15,15 +15,16 @@ void setup() {
 void loop() {
   if (!arduboy.nextFrame()) return;
   drawMap();
-  move_hero();
+  moveHero();
+  drawHero();
 
-  //arduboy.setCursor(0, 0);
+  arduboy.setCursor(0, 0);
   //arduboy.println(yMax);
   //arduboy.println(yMin);
 
 
 
-  FX::drawBitmap(hero.x, hero.y, FXhero, hero.frame, dbmNormal);
+  //FX::drawBitmap(hero.x, hero.y, FXhero, hero.frame, dbmNormal);
 
   FX::display(CLEAR_BUFFER);
 }

@@ -9,6 +9,8 @@
 
 Arduboy2 arduboy;
 
+void checkTile(Characters & character);
+
 //uint8_t frame = 0;
 //uint8_t herox = 64;
 constexpr uint8_t step = 8;
@@ -55,8 +57,9 @@ void drawMap()
 		}
 }
 
-void move_hero(){
+void moveHero(){
   arduboy.pollButtons();
+  
 
   if(arduboy.pressed(A_BUTTON))
 	{
@@ -75,25 +78,73 @@ void move_hero(){
 			}
 	}
   if(arduboy.justPressed(B_BUTTON)){
-    if (hero.frame < 1){
-      hero.frame++;
-    } else (hero.frame = 0);
+    if (hero.weapon == false){
+      hero.weapon = true;
+    } else (hero.weapon = false);
   }
+
+//movement
   if(arduboy.justPressed(UP_BUTTON)){
-    hero.y -= step;
+    hero.y -= hero.step;
     if (hero.y < yMin ) hero.y = yMax;
   }
+
   if(arduboy.justPressed(DOWN_BUTTON)){
-    hero.y += step;
+    hero.y += hero.step;
     if (hero.y > yMax ) hero.y = yMin;
   }
-  if(arduboy.justPressed(LEFT_BUTTON)){
-    hero.x -= step;
-    if (hero.x < xMin ) hero.x = xMax;
 
-  }
+  /*if(arduboy.justPressed(LEFT_BUTTON)){
+    hero.facingLeft = true;
+    hero.x -= hero.step;
+    if (hero.x < xMin ) hero.x = xMax;
+  }*/
+
   if(arduboy.justPressed(RIGHT_BUTTON)){
-    hero.x += step;
+    hero.facingLeft = false;
+    hero.x += hero.step;
     if (hero.x > xMax ) hero.x = xMin;
   }
+
+  if(arduboy.justPressed(LEFT_BUTTON))
+  {
+    // Calculate new X position
+    int newX = (hero.x - 8);
+
+    // Calculate tile coordinates of new position
+    uint8_t tileX = (newX / tileWidth);
+    uint8_t tileY = (hero.y / tileHeight);
+
+    // If position is non-solid (movement is allowed)...
+    TileType tileChecked = roomMap.getTile(tileX, tileY);
+    if(isSolid(tileChecked))
+      // Move player
+      hero.x = newX;
+  }
 }
+
+
+
+
+
+
+void drawHero(){
+  if(hero.weapon == false){
+    if(hero.facingLeft == true){
+      hero.frame = 0;
+    }
+    if(hero.facingLeft == false){
+      hero.frame = 1;
+    }
+  }
+  if(hero.weapon == true){
+    if(hero.facingLeft == true){
+      hero.frame = 2;
+    }
+    if(hero.facingLeft == false){
+      hero.frame = 3;
+    }
+  }
+  FX::drawBitmap(hero.x, hero.y, FXhero, hero.frame, dbmNormal);
+}
+
