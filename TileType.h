@@ -39,8 +39,60 @@ constexpr TileType fromTileIndex(uint8_t tileIndex)
 	return static_cast<TileType>(tileIndex);
 }
 
-constexpr bool isSolid(TileType tileType)
+/*constexpr bool isSolid(TileType tileType)
 {
 	// Currently all tiles apart from 'None' are solid
 	return (tileType != TileType::Floor);
+}*/
+
+// Note: Can't be 'constexpr' in C++11 because 'switch' is used
+bool isSolid(TileType tileType)
+{
+	switch(tileType)
+	{
+		// List all the solid types
+		case TileType::TopCornerLeft:
+		case TileType::TopMiddleWall:
+		case TileType::TopCornerRight:
+    case TileType::TopInnerLeft:
+    case TileType::TopInnerRight:
+    case TileType::MiddleLeftWall:
+    case TileType::MiddleRightWall:
+    case TileType::BottomInnerLeft:
+    case TileType::BottomInnerRight:
+    case TileType::BottomLeftCorner:
+    case TileType::BottomCenterWall:
+    case TileType::BottomRightWall:
+    //not sure on this ones yet
+    case TileType::Npc:
+		case TileType::Chest:
+    case TileType::Torch:
+  	case TileType::ClosedDoor:
+			// Return 'true', because it's solid
+			return true;
+		
+		// Any tile not listed above is non-solid
+		default:
+			// Return 'false', because it's not solid
+			return false;
+	}
+}
+
+bool isInteractive(TileType tileType)
+{
+	switch(tileType)
+	{
+		// List all the interactive types
+		case TileType::Npc:
+		case TileType::Chest:
+    case TileType::Torch:
+  	case TileType::ClosedDoor:
+			// Return 'true'
+			return true;
+		
+		// Any tile not listed above is non-interactive
+		default:
+			// Return 'false'
+			return false;
+	}
 }

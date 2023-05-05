@@ -1,6 +1,13 @@
 #pragma once
 
-struct Characters:Rect
+
+enum class Direction : uint8_t
+{
+	Up, Right, Down, Left
+};
+
+
+struct Characters
 {   
     uint8_t w=8;
     uint8_t h=8;
@@ -9,11 +16,11 @@ struct Characters:Rect
 
     //uint8_t iframe=50;
 
-    //Direction direction;
+    Direction direction;
 
     bool facingLeft = true;
     
-    bool enable = false;
+    //bool enable = false;
 
     bool collide = false;
 

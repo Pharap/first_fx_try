@@ -60,6 +60,7 @@ void drawMap()
 void moveHero(){
   arduboy.pollButtons();
   
+  
 
   if(arduboy.pressed(A_BUTTON))
 	{
@@ -85,66 +86,88 @@ void moveHero(){
 
 //movement
   if(arduboy.justPressed(UP_BUTTON)){
-    hero.y -= hero.step;
+    hero.direction = Direction::Up;
+    //checkTile(hero);
     if (hero.y < yMin ) hero.y = yMax;
   }
 
   if(arduboy.justPressed(DOWN_BUTTON)){
-    hero.y += hero.step;
+    hero.direction = Direction::Down;
+    //checkTile(hero);
     if (hero.y > yMax ) hero.y = yMin;
   }
 
-  /*if(arduboy.justPressed(LEFT_BUTTON)){
+  if(arduboy.justPressed(LEFT_BUTTON)){
     hero.facingLeft = true;
-    hero.x -= hero.step;
+    hero.direction = Direction::Left;
+    //checkTile(hero);
     if (hero.x < xMin ) hero.x = xMax;
-  }*/
+  }
 
   if(arduboy.justPressed(RIGHT_BUTTON)){
     hero.facingLeft = false;
-    hero.x += hero.step;
+    hero.direction = Direction::Right;
+    //checkTile(hero);
     if (hero.x > xMax ) hero.x = xMin;
   }
 
-  if(arduboy.justPressed(LEFT_BUTTON))
-  {
-    // Calculate new X position
-    int newX = (hero.x - 8);
+  //not sure if calling checkTile() like this is better than repeating it on every button press
+  if(arduboy.justPressed(RIGHT_BUTTON)||arduboy.justPressed(LEFT_BUTTON)||arduboy.justPressed(DOWN_BUTTON)||arduboy.justPressed(UP_BUTTON)){
+    checkTile(hero);
+  }
+}
+
+void checkTile(Characters & character){
+  // Calculate new X position
+  uint8_t newX = character.x;
+  uint8_t newY = character.y;
+  //checks the next tile depending which direction i'm looking
+  if(character.direction == Direction::Left){
+    newX = (character.x - character.step);
+  }
+  if(character.direction == Direction::Right){
+    newX = (character.x + character.step);
+  }
+  if(character.direction == Direction::Up){
+    newY = (character.y - character.step);
+  }
+  if(character.direction == Direction::Down){
+    newY = (character.y + character.step);
+  }
 
     // Calculate tile coordinates of new position
     uint8_t tileX = (newX / tileWidth);
-    uint8_t tileY = (hero.y / tileHeight);
+    uint8_t tileY = (newY / tileHeight);
 
     // If position is non-solid (movement is allowed)...
     TileType tileChecked = roomMap.getTile(tileX, tileY);
-    if(isSolid(tileChecked))
-      // Move player
-      hero.x = newX;
-  }
+    if(!isSolid(tileChecked)){
+      if(character.direction == Direction::Left || character.direction == Direction::Right){
+      character.x = newX;
+      } else character.y = newY;
+    }
+    //checking if the tile is interactive
+    //have to separate this or the movement from the checking tile logic, but it's working now 
+    if(isInteractive(tileChecked)){
+      //arduboy.println("hey! it's working!");
+      if(tileChecked==TileType::Torch){
+        arduboy.println("warm!");
+      }
+      if(tileChecked==TileType::Chest){
+        arduboy.println("yup, that's a chest");
+      }
+      
+    }
 }
 
 
 
 
-
-
 void drawHero(){
-  if(hero.weapon == false){
-    if(hero.facingLeft == true){
-      hero.frame = 0;
-    }
-    if(hero.facingLeft == false){
-      hero.frame = 1;
-    }
-  }
-  if(hero.weapon == true){
-    if(hero.facingLeft == true){
-      hero.frame = 2;
-    }
-    if(hero.facingLeft == false){
-      hero.frame = 3;
-    }
-  }
+  hero.frame = (hero.weapon) ?
+	((hero.facingLeft) ? 2 : 3) :
+	((hero.facingLeft) ? 0 : 1);
+
   FX::drawBitmap(hero.x, hero.y, FXhero, hero.frame, dbmNormal);
 }
 
