@@ -30,7 +30,7 @@ struct Characters
 
     uint8_t frame = 0;
 
-    int8_t life = 3;
+    int8_t life = 10;
 
 };
 

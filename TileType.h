@@ -86,6 +86,7 @@ bool isInteractive(TileType tileType)
 		case TileType::Npc:
 		case TileType::Chest:
     case TileType::Torch:
+    case TileType::Trap:
   	case TileType::ClosedDoor:
 			// Return 'true'
 			return true;

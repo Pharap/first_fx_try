@@ -24,6 +24,9 @@ constexpr uint8_t yMax = (Arduboy2::height() - tileHeight);
 constexpr uint8_t xMin = 0;
 constexpr uint8_t xMax = (Arduboy2::width() - tileWidth);
 
+//text to print when interacting with things
+String Text = "";
+
 Map roomMap;
 
 uint8_t mapIndex = 0;
@@ -151,13 +154,20 @@ void checkTile(Characters & character){
     if(isInteractive(tileChecked)){
       //arduboy.println("hey! it's working!");
       if(tileChecked==TileType::Torch){
-        arduboy.println("warm!");
+        Text = "warm!";
       }
       if(tileChecked==TileType::Chest){
-        arduboy.println("yup, that's a chest");
+        Text = "yup, that's a chest";
       }
-      
-    }
+      if(tileChecked==TileType::Trap){
+        Text = "ouch!";
+        if (character.life > 0) character.life -= 1;
+      }
+      if(tileChecked==TileType::Npc){
+        Text = "he! lo!";
+      }
+      //going back to empty text
+    } else Text = "";
 }
 
 

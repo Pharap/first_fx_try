@@ -19,8 +19,13 @@ void loop() {
   drawHero();
 
   arduboy.setCursor(0, 0);
+  //arduboy.print("life:");
+  arduboy.print(Text);
+  //arduboy.setCursor(5*6, 0);
+
   //arduboy.println(yMax);
   //arduboy.println(yMin);
+  //arduboy.print(hero.life);
 
 
 
