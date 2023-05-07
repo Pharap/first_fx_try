@@ -120,54 +120,102 @@ void moveHero(){
   }
 }
 
-void checkTile(Characters & character){
-  // Calculate new X position
+const __FlashStringHelper * interactWith(Characters & character, TileType tile, uint8_t tileX, uint8_t tileY)
+{
+  // // If tile is not interactive
+  // if(!isInteractive(tile))
+  //   // Return an empty string
+  //   return F("");
+
+  // Otherwise, check the tile type, and respond accordingly
+  switch(tile)
+  {
+    case TileType::Torch:
+      return F("It's warm!");
+
+    case TileType::Trap:
+    {
+      if (character.life > 0)
+        character.life -= 1;
+
+      return F("Ouch!");
+    }
+
+    case TileType::Chest:
+      return F("Yup, that's a chest.");
+
+    case TileType::Npc:
+      return F("Hello!");
+
+    case TileType::OpenDoor:
+    {
+      // Try to find the open door
+      Door door;
+      if(roomMap.findDoorAt(tileX, tileY, door))
+      {
+        // If a door was found, load the map it connects to
+        loadIndexedMap(door.mapIndex);
+
+        // Return some relevant message
+        return F("Another room.");
+      }
+      else
+      {
+        // If no map was found, tell the player the door is broken
+        return F("It's broken.");
+      }
+    }
+
+    case TileType::ClosedDoor:
+      return F("It's locked.");
+
+    // In all other cases
+    default:
+      return F("There's nothing here.");
+  }
+}
+
+void checkTile(Characters & character)
+{
+  // Calculate new position
   uint8_t newX = character.x;
   uint8_t newY = character.y;
-  //checks the next tile depending which direction i'm looking
-  if(character.direction == Direction::Left){
-    newX = (character.x - character.step);
-  }
-  if(character.direction == Direction::Right){
-    newX = (character.x + character.step);
-  }
-  if(character.direction == Direction::Up){
-    newY = (character.y - character.step);
-  }
-  if(character.direction == Direction::Down){
-    newY = (character.y + character.step);
+
+  // Checks the next tile depending which direction the character is looking
+  switch(character.direction)
+  {
+    case Direction::Left:
+      newX = (character.x - character.step);
+      break;
+
+    case Direction::Right:
+      newX = (character.x + character.step);
+      break;
+
+    case Direction::Up:
+      newY = (character.y - character.step);
+      break;
+
+    case Direction::Down:
+      newY = (character.y + character.step);
+      break;
   }
 
-    // Calculate tile coordinates of new position
-    uint8_t tileX = (newX / tileWidth);
-    uint8_t tileY = (newY / tileHeight);
+  // Calculate tile coordinates of new position
+  uint8_t tileX = (newX / tileWidth);
+  uint8_t tileY = (newY / tileHeight);
 
-    // If position is non-solid (movement is allowed)...
-    TileType tileChecked = roomMap.getTile(tileX, tileY);
-    if(!isSolid(tileChecked)){
-      if(character.direction == Direction::Left || character.direction == Direction::Right){
-      character.x = newX;
-      } else character.y = newY;
-    }
-    //checking if the tile is interactive
-    //have to separate this or the movement from the checking tile logic, but it's working now 
-    if(isInteractive(tileChecked)){
-      //arduboy.println("hey! it's working!");
-      if(tileChecked==TileType::Torch){
-        Text = "warm!";
-      }
-      if(tileChecked==TileType::Chest){
-        Text = "yup, that's a chest";
-      }
-      if(tileChecked==TileType::Trap){
-        Text = "ouch!";
-        if (character.life > 0) character.life -= 1;
-      }
-      if(tileChecked==TileType::Npc){
-        Text = "he! lo!";
-      }
-      //going back to empty text
-    } else Text = "";
+  TileType tile = roomMap.getTile(tileX, tileY);
+
+  // If position is non-solid (movement is allowed)...
+  if(!isSolid(tile))
+  {
+    character.x = newX;
+    character.y = newY;
+  }
+  
+  // Try to interact with the tile
+  Text = interactWith(character, tile, tileX, tileY);
 }
 
 
