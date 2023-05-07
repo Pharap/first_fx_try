@@ -4,28 +4,50 @@
 #include <avr/pgmspace.h>
 
 #include "maps.h"
+#include "Door.h"
 #include "TileType.h"
 
-class Map{
-  private: 
-    TileType data[mapHeight][mapWidth];
+class Map
+{
+  private:
+    // A 2D array of tiles
+    TileType map[mapHeight][mapWidth];
+
+    // An array of doors, up to a maximum of 4
+    Door doors[maxDoors];
+
   public:
-    //retrieves tile from map
-    TileType getTile(uint8_t x, uint8_t y) const{
-      if((x > mapWidth)||(y > mapHeight)) return TileType::Invalid;
+    // Retrieves tile from map
+    TileType getTile(uint8_t x, uint8_t y) const
+    {
+      // If coordinate is out of bounds
+      if((x > mapWidth) || (y > mapHeight))
+        // Return an invalid tile
+        return TileType::Invalid;
 
-      return this->data[y][x];
+      // Else, return the tile at the coordinates
+      return this->map[y][x];
     }
-  //overwrite tile on map
-  void setTile(uint8_t x, uint8_t y, TileType tile){
-    if((x > mapWidth)||(y > mapHeight)) return;
 
-    this->data[y][x] = tile;
-  }
+    // Overwrites tile on map
+    void setTile(uint8_t x, uint8_t y, TileType tile)
+    {
+      // If coordinate is out of bounds
+      if((x > mapWidth) || (y > mapHeight))
+        // Do nothing
+        return;
 
-  //loads map
-  void load(const uint8_t * data){
-    //copies map from progmem to ram
-    memcpy_P(this->data, data, sizeof(this->data));
-  }
+      // Else, set the tile
+      this->map[y][x] = tile;
+    }
+
+    // Loads map
+    void load(MapData map)
+    {
+      // Copies map from progmem to ram
+      memcpy_P(this->map, map.map, sizeof(this->map));
+
+      // Copies doors from progmem to ram
+      memcpy_P(this->doors, map.doors, sizeof(Door) * map.doorCount);
+    }
 };
